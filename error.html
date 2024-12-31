@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Billing System - Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .register-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+        }
+        .input-valid {
+            border-color: green !important;
+        }
+        .input-invalid {
+            border-color: red !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h2 class="text-center mb-4">Register</h2>
+            <form id="registerForm" novalidate>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    <small class="error-message d-none">Enter a valid email address.</small>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
+                    <small class="password-feedback d-none">Password strength: <span id="passwordStrength"></span></small>
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                    <small class="error-message d-none">Passwords do not match.</small>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+
+        function validateEmail(input) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const errorElement = input.nextElementSibling;
+            if (!regex.test(input.value.trim())) {
+                errorElement.classList.remove('d-none');
+                input.classList.add('input-invalid');
+                input.classList.remove('input-valid');
+            } else {
+                errorElement.classList.add('d-none');
+                input.classList.add('input-valid');
+                input.classList.remove('input-invalid');
+            }
+        }
+
+        function validatePasswordStrength(input) {
+            const feedback = input.nextElementSibling;
+            const value = input.value;
+            feedback.classList.remove('d-none');
+
+            if (value.length < 6) {
+                passwordStrength.textContent = 'Weak';
+                passwordStrength.style.color = 'red';
+            } else if (value.length < 10) {
+                passwordStrength.textContent = 'Medium';
+                passwordStrength.style.color = 'orange';
+            } else {
+                passwordStrength.textContent = 'Strong';
+                passwordStrength.style.color = 'green';
+            }
+        }
+
+        function validateConfirmPassword() {
+            const errorElement = confirmPassword.nextElementSibling;
+            if (password.value !== confirmPassword.value) {
+                errorElement.classList.remove('d-none');
+                confirmPassword.classList.add('input-invalid');
+                confirmPassword.classList.remove('input-valid');
+            } else {
+                errorElement.classList.add('d-none');
+                confirmPassword.classList.add('input-valid');
+                confirmPassword.classList.remove('input-invalid');
+            }
+        }
+
+        email.addEventListener('input', () => validateEmail(email));
+        password.addEventListener('input', () => validatePasswordStrength(password));
+        confirmPassword.addEventListener('input', validateConfirmPassword);
+
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            validateEmail(email);
+            validatePasswordStrength(password);
+            validateConfirmPassword();
+
+            if (!document.querySelector('.input-invalid')) {
+                alert('Registration Successful!');
+            }
+        });
+    </script>
+</body>
+</html>
